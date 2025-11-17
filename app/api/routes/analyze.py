@@ -21,8 +21,15 @@ from app.config.config import SECURITY_CONFIG
 router = APIRouter(prefix="/analyze", tags=["analyze"])
 logger = get_logger(__name__)
 
-# Initialize Gemini service
-gemini_service = GeminiService()
+# Lazy initialization of Gemini service
+_gemini_service = None
+
+def get_gemini_service():
+    """Get or create Gemini service instance (lazy initialization)."""
+    global _gemini_service
+    if _gemini_service is None:
+        _gemini_service = GeminiService()
+    return _gemini_service
 
 @router.post("", response_model=AnalyzeResponse)
 async def analyze_code(
@@ -50,7 +57,8 @@ async def analyze_code(
         
         logger.info(f"Analyzing code (length: {len(request.code)} characters)")
         
-        # Analyze code using Gemini
+        # Analyze code using Gemini (lazy initialization)
+        gemini_service = get_gemini_service()
         analysis_result = gemini_service.analyze_code(request.code)
         
         # Create analysis record

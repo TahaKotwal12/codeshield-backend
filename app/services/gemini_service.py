@@ -14,12 +14,17 @@ class GeminiService:
         """Initialize Gemini service with API key."""
         api_key = GEMINI_CONFIG["api_key"]
         if not api_key:
-            raise ValueError("GEMINI_API_KEY is not set in environment variables")
+            logger.error("GEMINI_API_KEY is not set in environment variables")
+            raise ValueError("GEMINI_API_KEY is not set in environment variables. Please set it in your .env file or Vercel environment variables.")
         
-        genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel(GEMINI_CONFIG["model"])
-        self.temperature = GEMINI_CONFIG["temperature"]
-        logger.info("Gemini service initialized successfully")
+        try:
+            genai.configure(api_key=api_key)
+            self.model = genai.GenerativeModel(GEMINI_CONFIG["model"])
+            self.temperature = GEMINI_CONFIG["temperature"]
+            logger.info("Gemini service initialized successfully")
+        except Exception as e:
+            logger.error(f"Failed to initialize Gemini service: {str(e)}")
+            raise ValueError(f"Failed to initialize Gemini service: {str(e)}")
     
     def analyze_code(self, code: str) -> dict:
         """
