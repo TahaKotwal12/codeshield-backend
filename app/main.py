@@ -15,13 +15,13 @@ import logging
 APP_TITLE = "CodeShield AI Backend"
 app = FastAPI(title=APP_TITLE, version="1.0.0")
 
-# CORS Middleware
+# CORS Middleware - Allow all origins to fix CORS issues
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=CORS_ORIGINS,
-    allow_credentials=True,
-    allow_methods=CORS_METHODS,
-    allow_headers=CORS_HEADERS,
+    allow_origin_regex=r".*",  # Allow all origins via regex
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allow_headers=["*"],
 )
 
 # Include API routes

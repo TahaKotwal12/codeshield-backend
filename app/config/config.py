@@ -42,8 +42,10 @@ DEBUG = os.getenv("DEBUG", "true").lower() == "true"
 LOG_LEVEL = os.getenv("LOG_LEVEL", "debug").upper()
 
 # CORS Configuration
-CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:5173").split(",")
-CORS_METHODS = os.getenv("CORS_METHODS", "GET,POST,PUT,DELETE,OPTIONS").split(",")
+# Default allows common development ports and production domains
+DEFAULT_CORS_ORIGINS = "http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173"
+CORS_ORIGINS = os.getenv("CORS_ORIGINS", DEFAULT_CORS_ORIGINS).split(",")
+CORS_METHODS = os.getenv("CORS_METHODS", "GET,POST,PUT,DELETE,OPTIONS,PATCH").split(",")
 CORS_HEADERS = os.getenv("CORS_HEADERS", "*").split(",")
 
 # Google Gemini API Configuration
